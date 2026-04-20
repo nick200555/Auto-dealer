@@ -1,0 +1,1 @@
+# Auto Dealer Settings DocType

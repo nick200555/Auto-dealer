@@ -1,0 +1,48 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "AD-INS-.YYYY.-.#####",
+ "creation": "2026-04-20 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicle","customer","vehicle_sale","insurance_company","policy_number",
+  "premium_amount","start_date","end_date","section_break_coverage",
+  "coverage_type","idv_value","ncb_percentage","section_break_status",
+  "renewal_reminder_sent","status","notes"
+ ],
+ "fields": [
+  {"fieldname":"vehicle","fieldtype":"Link","label":"Vehicle (VIN)","options":"Vehicle","reqd":1,"in_list_view":1},
+  {"fieldname":"customer","fieldtype":"Link","label":"Customer","options":"Customer","reqd":1,"in_list_view":1},
+  {"fieldname":"vehicle_sale","fieldtype":"Link","label":"Vehicle Sale","options":"Vehicle Sale"},
+  {"fieldname":"insurance_company","fieldtype":"Data","label":"Insurance Company","reqd":1,"in_list_view":1},
+  {"fieldname":"policy_number","fieldtype":"Data","label":"Policy Number","reqd":1,"unique":1,"in_list_view":1},
+  {"fieldname":"premium_amount","fieldtype":"Currency","label":"Premium Amount","reqd":1},
+  {"fieldname":"start_date","fieldtype":"Date","label":"Policy Start Date","reqd":1},
+  {"fieldname":"end_date","fieldtype":"Date","label":"Policy End Date","reqd":1,"in_list_view":1},
+  {"fieldname":"section_break_coverage","fieldtype":"Section Break","label":"Coverage Details"},
+  {"fieldname":"coverage_type","fieldtype":"Select","label":"Coverage Type","options":"Comprehensive\nThird Party\nThird Party Fire & Theft"},
+  {"fieldname":"idv_value","fieldtype":"Currency","label":"IDV (Insured Declared Value)"},
+  {"fieldname":"ncb_percentage","fieldtype":"Percent","label":"NCB (No Claim Bonus) %"},
+  {"fieldname":"section_break_status","fieldtype":"Section Break","label":"Status"},
+  {"fieldname":"renewal_reminder_sent","fieldtype":"Check","label":"Renewal Reminder Sent","default":0},
+  {"fieldname":"status","fieldtype":"Select","label":"Status","options":"Active\nExpired\nRenewed\nCancelled","default":"Active","reqd":1,"in_list_view":1,"in_standard_filter":1},
+  {"fieldname":"notes","fieldtype":"Small Text","label":"Notes"}
+ ],
+ "has_web_view": 0,
+ "is_submittable": 1,
+ "modified": "2026-04-20 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Auto Dealer",
+ "name": "Insurance Policy",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {"create":1,"delete":1,"email":1,"read":1,"report":1,"role":"Insurance Manager","submit":1,"cancel":1,"write":1},
+  {"read":1,"role":"Sales Executive"},
+  {"read":1,"role":"Sales Manager"}
+ ],
+ "sort_field": "end_date",
+ "sort_order": "ASC",
+ "track_changes": 1
+}

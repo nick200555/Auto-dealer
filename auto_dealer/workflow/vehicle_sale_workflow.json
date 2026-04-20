@@ -1,0 +1,54 @@
+{
+ "creation": "2026-04-20 10:00:00.000000",
+ "doctype": "Workflow",
+ "document_type": "Vehicle Sale",
+ "is_active": 1,
+ "modified": "2026-04-20 10:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Vehicle Sale Workflow",
+ "owner": "Administrator",
+ "send_email_alert": 0,
+ "states": [
+  {"doc_status": "0", "state": "Draft",              "allow_edit": "Sales Consultant"},
+  {"doc_status": "0", "state": "Verified",           "allow_edit": "DMS Manager"},
+  {"doc_status": "0", "state": "Finance Approved",   "allow_edit": "Finance Executive"},
+  {"doc_status": "0", "state": "Delivery Scheduled", "allow_edit": "DMS Manager"},
+  {"doc_status": "1", "state": "Delivered",          "allow_edit": "Dealer Admin"},
+  {"doc_status": "2", "state": "Cancelled",          "allow_edit": "Dealer Admin"}
+ ],
+ "transitions": [
+  {
+   "action": "Verify",
+   "allowed": "DMS Manager",
+   "condition": "doc.grand_total > 0",
+   "next_state": "Verified",
+   "state": "Draft"
+  },
+  {
+   "action": "Approve Finance",
+   "allowed": "Finance Executive",
+   "condition": "doc.finance_done == 1",
+   "next_state": "Finance Approved",
+   "state": "Verified"
+  },
+  {
+   "action": "Skip Finance",
+   "allowed": "DMS Manager",
+   "condition": "doc.finance_done == 0",
+   "next_state": "Delivery Scheduled",
+   "state": "Verified"
+  },
+  {
+   "action": "Schedule Delivery",
+   "allowed": "DMS Manager",
+   "next_state": "Delivery Scheduled",
+   "state": "Finance Approved"
+  },
+  {
+   "action": "Mark Delivered",
+   "allowed": "Dealer Admin",
+   "next_state": "Delivered",
+   "state": "Delivery Scheduled"
+  }
+ ]
+}

@@ -1,0 +1,175 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "field:vin_number",
+ "creation": "2026-04-20 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vin_number", "make", "model", "variant", "year_of_manufacture",
+  "color", "fuel_type", "vehicle_type", "status",
+  "section_break_pricing", "ex_showroom_price", "on_road_price",
+  "section_break_inventory", "days_in_stock", "oem_invoice_date",
+  "branch", "odometer_reading"
+ ],
+ "fields": [
+  {
+   "fieldname": "vin_number",
+   "fieldtype": "Data",
+   "label": "VIN Number",
+   "reqd": 1,
+   "unique": 1,
+   "length": 17,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "bold": 1,
+   "description": "17-character Vehicle Identification Number"
+  },
+  {
+   "fieldname": "make",
+   "fieldtype": "Link",
+   "label": "Make",
+   "options": "Vehicle Make",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "model",
+   "fieldtype": "Link",
+   "label": "Model",
+   "options": "Vehicle Model",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "variant",
+   "fieldtype": "Data",
+   "label": "Variant",
+   "description": "e.g. VXI, ZXI, LXI, S, G etc."
+  },
+  {
+   "fieldname": "year_of_manufacture",
+   "fieldtype": "Int",
+   "label": "Year of Manufacture",
+   "reqd": 1
+  },
+  {
+   "fieldname": "color",
+   "fieldtype": "Link",
+   "label": "Color",
+   "options": "Vehicle Color"
+  },
+  {
+   "fieldname": "fuel_type",
+   "fieldtype": "Select",
+   "label": "Fuel Type",
+   "options": "Petrol\nDiesel\nCNG\nElectric\nHybrid",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicle_type",
+   "fieldtype": "Select",
+   "label": "Vehicle Type",
+   "options": "New\nUsed\nDemo\nCertified Pre-Owned",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Available\nBooked\nSold\nIn Service\nDemo",
+   "default": "Available",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "section_break_pricing",
+   "fieldtype": "Section Break",
+   "label": "Pricing"
+  },
+  {
+   "fieldname": "ex_showroom_price",
+   "fieldtype": "Currency",
+   "label": "Ex-Showroom Price",
+   "reqd": 1,
+   "description": "Ex-showroom price from OEM"
+  },
+  {
+   "fieldname": "on_road_price",
+   "fieldtype": "Currency",
+   "label": "On-Road Price",
+   "description": "Full on-road price including registration, insurance, etc."
+  },
+  {
+   "fieldname": "section_break_inventory",
+   "fieldtype": "Section Break",
+   "label": "Inventory Details"
+  },
+  {
+   "fieldname": "days_in_stock",
+   "fieldtype": "Int",
+   "label": "Days in Stock",
+   "read_only": 1,
+   "in_list_view": 1,
+   "description": "Auto-calculated from OEM invoice date"
+  },
+  {
+   "fieldname": "oem_invoice_date",
+   "fieldtype": "Date",
+   "label": "OEM Invoice Date",
+   "reqd": 1,
+   "description": "Date of receipt from OEM — used for days_in_stock calculation"
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "odometer_reading",
+   "fieldtype": "Float",
+   "label": "Odometer Reading (km)",
+   "default": 0
+  }
+ ],
+ "has_web_view": 0,
+ "is_submittable": 1,
+ "modified": "2026-04-20 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Auto Dealer",
+ "name": "Vehicle",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1, "delete": 1, "email": 1, "export": 1, "print": 1,
+   "read": 1, "report": 1, "role": "Dealer Admin",
+   "share": 1, "submit": 1, "cancel": 1, "write": 1
+  },
+  {
+   "create": 1, "delete": 1, "read": 1, "report": 1,
+   "role": "DMS Manager", "write": 1
+  },
+  {
+   "read": 1, "role": "Sales Consultant"
+  },
+  {
+   "read": 1, "role": "Service Advisor"
+  },
+  {
+   "read": 1, "role": "Workshop Technician"
+  },
+  {
+   "read": 1, "role": "Finance Executive"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1,
+ "track_seen": 1
+}

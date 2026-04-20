@@ -1,0 +1,140 @@
+{
+ "actions": [],
+ "creation": "2026-04-20 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "dealership_name", "oem_brand",
+  "section_break_whatsapp", "whatsapp_enabled", "whatsapp_api_key",
+  "section_break_marketplace", "cardekho_dealer_id", "cardekho_api_url", "cardekho_api_key",
+  "section_break_incentives", "finance_crosssell_bonus", "insurance_crosssell_bonus",
+  "accessories_commission_pct", "loyalty_point_value",
+  "section_break_inventory", "slow_moving_threshold_days", "service_warehouse"
+ ],
+ "fields": [
+  {
+   "fieldname": "dealership_name",
+   "fieldtype": "Data",
+   "label": "Dealership Name",
+   "reqd": 1,
+   "description": "Displayed on invoices and messages (PDF Section 13.1)"
+  },
+  {
+   "fieldname": "oem_brand",
+   "fieldtype": "Select",
+   "label": "OEM Brand",
+   "options": "\nMaruti\nHyundai\nTata\nMahindra\nKia\nHonda\nToyota\nSkoda\nVolkswagen\nMG\nRenault\nNissan",
+   "description": "OEM brand for this dealership (PDF Section 13.1)"
+  },
+  {
+   "fieldname": "section_break_whatsapp",
+   "fieldtype": "Section Break",
+   "label": "WhatsApp Configuration"
+  },
+  {
+   "fieldname": "whatsapp_enabled",
+   "fieldtype": "Check",
+   "label": "WhatsApp Enabled",
+   "default": 0,
+   "description": "Toggle WhatsApp messaging on/off (PDF Section 13.1)"
+  },
+  {
+   "fieldname": "whatsapp_api_key",
+   "fieldtype": "Password",
+   "label": "WhatsApp API Key",
+   "description": "Interakt / Wati API key — stored encrypted (PDF Section 13.1)"
+  },
+  {
+   "fieldname": "section_break_marketplace",
+   "fieldtype": "Section Break",
+   "label": "CarDekho / Marketplace"
+  },
+  {
+   "fieldname": "cardekho_dealer_id",
+   "fieldtype": "Data",
+   "label": "CarDekho Dealer ID",
+   "description": "CarDekho partner dealer ID (PDF Section 13.1)"
+  },
+  {
+   "fieldname": "cardekho_api_url",
+   "fieldtype": "Data",
+   "label": "CarDekho API URL"
+  },
+  {
+   "fieldname": "cardekho_api_key",
+   "fieldtype": "Password",
+   "label": "CarDekho API Key"
+  },
+  {
+   "fieldname": "section_break_incentives",
+   "fieldtype": "Section Break",
+   "label": "Incentive Configuration"
+  },
+  {
+   "fieldname": "finance_crosssell_bonus",
+   "fieldtype": "Currency",
+   "label": "Finance Cross-sell Bonus (per deal)",
+   "default": 500,
+   "description": "Bonus per finance cross-sell deal (PDF Section 13.1 / 10.1)"
+  },
+  {
+   "fieldname": "insurance_crosssell_bonus",
+   "fieldtype": "Currency",
+   "label": "Insurance Cross-sell Bonus (per deal)",
+   "default": 300,
+   "description": "Bonus per insurance deal (PDF Section 13.1 / 10.1)"
+  },
+  {
+   "fieldname": "accessories_commission_pct",
+   "fieldtype": "Percent",
+   "label": "Accessories Upsell Commission %",
+   "default": 5,
+   "description": "5% of accessories value (PDF Section 10.1)"
+  },
+  {
+   "fieldname": "loyalty_point_value",
+   "fieldtype": "Currency",
+   "label": "Loyalty Point Value (₹ per point)",
+   "default": 1,
+   "description": "1 point = ₹1 off on service (PDF Section 13.1 / 11.2)"
+  },
+  {
+   "fieldname": "section_break_inventory",
+   "fieldtype": "Section Break",
+   "label": "Inventory Settings"
+  },
+  {
+   "fieldname": "slow_moving_threshold_days",
+   "fieldtype": "Int",
+   "label": "Slow Moving Threshold (Days)",
+   "default": 60,
+   "description": "Days before slow-moving alert — default 60 (PDF Section 13.1)"
+  },
+  {
+   "fieldname": "service_warehouse",
+   "fieldtype": "Link",
+   "label": "Service Warehouse",
+   "options": "Warehouse",
+   "description": "Warehouse used for parts stock checks in Service Job Card"
+  }
+ ],
+ "has_web_view": 0,
+ "is_single": 1,
+ "issingle": 1,
+ "modified": "2026-04-20 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Auto Dealer",
+ "name": "Auto Dealer Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1, "read": 1, "role": "Dealer Admin", "write": 1
+  },
+  {
+   "read": 1, "role": "DMS Manager"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

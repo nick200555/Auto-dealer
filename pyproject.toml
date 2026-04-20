@@ -1,0 +1,16 @@
+[project]
+name = "auto_dealer"
+authors = [
+    { name = "Seria Internship", email = "admin@seria.com"}
+]
+description = "Automobile Dealership ERP — ERPNext v15+ Custom App"
+requires-python = ">=3.10"
+readme = "README.md"
+dynamic = ["version"]
+
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.bench.dev-dependencies]
+frappe = ">=15.0.0"
