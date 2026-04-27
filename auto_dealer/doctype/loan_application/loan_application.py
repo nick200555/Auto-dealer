@@ -1,7 +1,7 @@
 """
 Loan Application DocType Controller
 --------------------------------------
-Module path: auto_dealer.auto_dealer.auto_dealer.doctype.loan_application.loan_application
+Module path: auto_dealer.auto_dealer.doctype.loan_application.loan_application
 
 EMI formula exactly as given in PDF Section 8.1:
     EMI = P × r × (1+r)^n / ((1+r)^n - 1)

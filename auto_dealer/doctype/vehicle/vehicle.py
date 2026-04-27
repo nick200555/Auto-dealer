@@ -1,7 +1,7 @@
 """
 Vehicle DocType Controller
 --------------------------
-Module path: auto_dealer.auto_dealer.auto_dealer.doctype.vehicle.vehicle
+Module path: auto_dealer.auto_dealer.doctype.vehicle.vehicle
 
 Business logic exactly as specified in the automobile_dealership_erpnext_v15 document
 (Section 5.2 — Vehicle Controller Key Business Logic).

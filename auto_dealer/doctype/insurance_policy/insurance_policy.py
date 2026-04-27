@@ -1,7 +1,7 @@
 """
 Insurance Policy DocType Controller
 --------------------------------------
-Module path: auto_dealer.auto_dealer.auto_dealer.doctype.insurance_policy.insurance_policy
+Module path: auto_dealer.auto_dealer.doctype.insurance_policy.insurance_policy
 
 Tracks insurance policy lifecycle:
   - Validates policy date range

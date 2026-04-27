@@ -1,7 +1,7 @@
 """
 OEM Target DocType Controller
 --------------------------------
-Module path: auto_dealer.auto_dealer.auto_dealer.doctype.oem_target.oem_target
+Module path: auto_dealer.auto_dealer.doctype.oem_target.oem_target
 
 Tracks OEM-allocated targets vs actual sales achievement:
   - Pulls real data from Vehicle Sale for the month/executive

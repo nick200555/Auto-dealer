@@ -1,7 +1,7 @@
 """
 Service Job Card DocType Controller
 --------------------------------------
-Module path: auto_dealer.auto_dealer.auto_dealer.doctype.service_job_card.service_job_card
+Module path: auto_dealer.auto_dealer.doctype.service_job_card.service_job_card
 """
 
 import frappe

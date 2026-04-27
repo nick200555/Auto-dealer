@@ -1,7 +1,7 @@
 """
 Test Drive DocType Controller
 -------------------------------
-Module path: auto_dealer.auto_dealer.auto_dealer.doctype.test_drive.test_drive
+Module path: auto_dealer.auto_dealer.doctype.test_drive.test_drive
 """
 
 import frappe

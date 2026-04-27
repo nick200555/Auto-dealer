@@ -1,7 +1,7 @@
 """
 Vehicle Sale DocType Controller
 --------------------------------
-Module path: auto_dealer.auto_dealer.auto_dealer.doctype.vehicle_sale.vehicle_sale
+Module path: auto_dealer.auto_dealer.doctype.vehicle_sale.vehicle_sale
 """
 
 import frappe
