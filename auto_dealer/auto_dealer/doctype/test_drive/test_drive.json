@@ -1,0 +1,178 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "AD-TEST-.YYYY.-.#####",
+ "creation": "2026-04-20 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicle",
+  "customer",
+  "customer_name",
+  "mobile_no",
+  "sales_executive",
+  "test_drive_date",
+  "start_time",
+  "end_time",
+  "odometer_start",
+  "odometer_end",
+  "distance_covered",
+  "section_break_feedback",
+  "customer_feedback",
+  "rating",
+  "follow_up_date",
+  "section_break_status",
+  "status",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle (VIN)",
+   "options": "Vehicle",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "fetch_from": "customer.customer_name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mobile_no",
+   "fieldtype": "Phone",
+   "label": "Mobile No."
+  },
+  {
+   "fieldname": "sales_executive",
+   "fieldtype": "Link",
+   "label": "Sales Executive",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "test_drive_date",
+   "fieldtype": "Date",
+   "label": "Test Drive Date",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Time",
+   "label": "Start Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Time",
+   "label": "End Time"
+  },
+  {
+   "fieldname": "odometer_start",
+   "fieldtype": "Float",
+   "label": "Odometer Start (km)"
+  },
+  {
+   "fieldname": "odometer_end",
+   "fieldtype": "Float",
+   "label": "Odometer End (km)"
+  },
+  {
+   "fieldname": "distance_covered",
+   "fieldtype": "Float",
+   "label": "Distance Covered (km)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_feedback",
+   "fieldtype": "Section Break",
+   "label": "Customer Feedback"
+  },
+  {
+   "fieldname": "customer_feedback",
+   "fieldtype": "Text Editor",
+   "label": "Feedback / Notes"
+  },
+  {
+   "fieldname": "rating",
+   "fieldtype": "Rating",
+   "label": "Customer Rating"
+  },
+  {
+   "fieldname": "follow_up_date",
+   "fieldtype": "Date",
+   "label": "Follow-Up Date"
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Scheduled\nCompleted\nCancelled\nNo Show",
+   "default": "Scheduled",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  }
+ ],
+ "has_web_view": 0,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-04-20 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Auto Dealer",
+ "name": "Test Drive",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Sales Executive",
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "test_drive_date",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

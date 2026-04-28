@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "creation": "2026-04-20 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "labour_code",
+  "labour_name",
+  "hours",
+  "rate",
+  "amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "labour_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Labour Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "labour_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Labour Name"
+  },
+  {
+   "default": "1",
+   "fieldname": "hours",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Hours",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rate per Hour",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "modified": "2026-04-20 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Auto Dealer",
+ "name": "Service Job Card Labour",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

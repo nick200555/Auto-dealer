@@ -1,0 +1,261 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "AD-SALE-.YYYY.-.#####",
+ "creation": "2026-04-20 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicle",
+  "customer",
+  "customer_name",
+  "mobile_no",
+  "sales_executive",
+  "sale_date",
+  "section_break_pricing",
+  "agreed_price",
+  "discount_amount",
+  "accessories_amount",
+  "total_amount",
+  "section_break_financing",
+  "finance_type",
+  "financier",
+  "loan_amount",
+  "down_payment",
+  "tenure_months",
+  "interest_rate",
+  "emi_amount",
+  "section_break_insurance",
+  "insurance_company",
+  "insurance_policy_no",
+  "insurance_premium",
+  "insurance_start_date",
+  "insurance_end_date",
+  "section_break_status",
+  "status",
+  "delivery_date",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle (VIN)",
+   "options": "Vehicle",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "fetch_from": "customer.customer_name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mobile_no",
+   "fieldtype": "Phone",
+   "label": "Mobile No."
+  },
+  {
+   "fieldname": "sales_executive",
+   "fieldtype": "Link",
+   "label": "Sales Executive",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sale_date",
+   "fieldtype": "Date",
+   "label": "Sale Date",
+   "reqd": 1,
+   "default": "Today",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "section_break_pricing",
+   "fieldtype": "Section Break",
+   "label": "Pricing"
+  },
+  {
+   "fieldname": "agreed_price",
+   "fieldtype": "Currency",
+   "label": "Agreed Sale Price",
+   "reqd": 1
+  },
+  {
+   "fieldname": "discount_amount",
+   "fieldtype": "Currency",
+   "label": "Discount Amount",
+   "default": 0
+  },
+  {
+   "fieldname": "accessories_amount",
+   "fieldtype": "Currency",
+   "label": "Accessories / Add-ons",
+   "default": 0
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Total Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_financing",
+   "fieldtype": "Section Break",
+   "label": "Financing"
+  },
+  {
+   "fieldname": "finance_type",
+   "fieldtype": "Select",
+   "label": "Finance Type",
+   "options": "Cash\nLoan\nLease",
+   "default": "Cash"
+  },
+  {
+   "fieldname": "financier",
+   "fieldtype": "Link",
+   "label": "Financier (Bank/NBFC)",
+   "options": "Supplier",
+   "depends_on": "eval:doc.finance_type==='Loan' || doc.finance_type==='Lease'"
+  },
+  {
+   "fieldname": "loan_amount",
+   "fieldtype": "Currency",
+   "label": "Loan Amount",
+   "depends_on": "eval:doc.finance_type==='Loan' || doc.finance_type==='Lease'"
+  },
+  {
+   "fieldname": "down_payment",
+   "fieldtype": "Currency",
+   "label": "Down Payment",
+   "depends_on": "eval:doc.finance_type==='Loan' || doc.finance_type==='Lease'"
+  },
+  {
+   "fieldname": "tenure_months",
+   "fieldtype": "Int",
+   "label": "Tenure (Months)",
+   "depends_on": "eval:doc.finance_type==='Loan'"
+  },
+  {
+   "fieldname": "interest_rate",
+   "fieldtype": "Percent",
+   "label": "Annual Interest Rate (%)",
+   "depends_on": "eval:doc.finance_type==='Loan'"
+  },
+  {
+   "fieldname": "emi_amount",
+   "fieldtype": "Currency",
+   "label": "Monthly EMI",
+   "read_only": 1,
+   "depends_on": "eval:doc.finance_type==='Loan'"
+  },
+  {
+   "fieldname": "section_break_insurance",
+   "fieldtype": "Section Break",
+   "label": "Insurance"
+  },
+  {
+   "fieldname": "insurance_company",
+   "fieldtype": "Data",
+   "label": "Insurance Company"
+  },
+  {
+   "fieldname": "insurance_policy_no",
+   "fieldtype": "Data",
+   "label": "Insurance Policy Number"
+  },
+  {
+   "fieldname": "insurance_premium",
+   "fieldtype": "Currency",
+   "label": "Insurance Premium"
+  },
+  {
+   "fieldname": "insurance_start_date",
+   "fieldtype": "Date",
+   "label": "Insurance Start Date"
+  },
+  {
+   "fieldname": "insurance_end_date",
+   "fieldtype": "Date",
+   "label": "Insurance End Date"
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nBooked\nFinance Approved\nDelivery Pending\nDelivered\nCancelled",
+   "default": "Draft",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "delivery_date",
+   "fieldtype": "Date",
+   "label": "Delivery Date"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text Editor",
+   "label": "Remarks / Notes"
+  }
+ ],
+ "has_web_view": 0,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-04-20 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Auto Dealer",
+ "name": "Vehicle Sale",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Sales Executive",
+   "submit": 0,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Finance Manager"
+  }
+ ],
+ "sort_field": "sale_date",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
