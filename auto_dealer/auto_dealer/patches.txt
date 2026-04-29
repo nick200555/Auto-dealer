@@ -1,0 +1,3 @@
+# Patches to apply during bench migrate
+# Format: dotted.path.to.patch_module
+# auto_dealer.patches.v1_0.initial_setup

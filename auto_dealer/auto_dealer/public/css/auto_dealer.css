@@ -1,0 +1,51 @@
+/**
+ * Auto Dealer — Global App CSS
+ * Included on every Frappe Desk page via hooks.py app_include_css
+ */
+
+/* ── Days-in-Stock Color Coding ────────────────────────────────────────────── */
+.vin-fresh { color: #28a745; font-weight: 600; }
+.vin-ageing { color: #fd7e14; font-weight: 600; }
+.vin-slow-moving { color: #dc3545; font-weight: 600; }
+.vin-critical { color: #6f42c1; font-weight: 800; }
+
+/* ── Vehicle Status Badge Overrides ────────────────────────────────────────── */
+.indicator.available { background: #28a745; }
+.indicator.booked { background: #007bff; }
+.indicator.sold { background: #6c757d; }
+.indicator.demo { background: #17a2b8; }
+.indicator.in-transit { background: #ffc107; }
+.indicator.scrap { background: #343a40; }
+
+/* ── Auto Dealer Dashboard Card ──────────────────────────────────────────────*/
+.auto-dealer-kpi-card {
+	border: 1px solid var(--border-color);
+	border-radius: 8px;
+	padding: 16px 20px;
+	text-align: center;
+	background: var(--card-bg);
+	transition: box-shadow 0.2s ease;
+}
+
+.auto-dealer-kpi-card:hover {
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.auto-dealer-kpi-card .kpi-value {
+	font-size: 2rem;
+	font-weight: 700;
+	color: var(--text-color);
+}
+
+.auto-dealer-kpi-card .kpi-label {
+	font-size: 0.8rem;
+	color: var(--text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+/* ── EMI Schedule Status Colours ─────────────────────────────────────────── */
+.emi-status-paid { color: #28a745; }
+.emi-status-pending { color: #007bff; }
+.emi-status-overdue { color: #dc3545; font-weight: 700; }
+.emi-status-partial { color: #fd7e14; }
