@@ -1,0 +1,1071 @@
+Automobile Dealership ERP
+ ERPNext v15+ Implementation Guide
+ Complete Project Documentation — Start to End
+ Frappe Framework  |  Custom App: auto_dealer
+Industry
+Automobile Dealership (Medium Business)
+Framework
+ERPNext v15+ / Frappe
+Custom App
+auto_dealer
+Database
+MariaDB 10.6+
+Document
+Implementation Guide v1.0
+Date
+April 2026
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 2
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+Table of Contents
+1. Project Overview
+2. System Architecture
+3. Environment Setup
+    3.1 Prerequisites
+    3.2 Install Frappe Bench
+    3.3 Create Custom App
+    3.4 Directory Structure
+4. Custom App Scaffolding
+    4.1 hooks.py
+    4.2 modules.txt
+5. Module 1 — Dealer Management System (DMS) Core
+    5.1 Vehicle DocType
+    5.2 Vehicle Sale DocType
+6. Module 2 — Vehicle Inventory Management
+    6.1 Inventory Tracking
+    6.2 Marketplace Sync
+    6.3 Parts & Accessories
+7. Module 3 — Sales & Lead Management (CRM)
+    7.1 Lead Capture
+    7.2 Test Drive DocType
+8. Module 4 — Finance, Insurance & Billing
+    8.1 Loan Application
+    8.2 Insurance Policy
+    8.3 GST Billing
+9. Module 5 — Service & After-Sales Workshop
+    9.1 Service Job Card
+    9.2 AMC & Warranty Tracker
+10. Module 6 — HR, Payroll & Incentives
+    10.1 Sales Incentive
+    10.2 Attendance Integration
+11. Module 7 — Marketing & Customer Retention
+    11.1 WhatsApp Integration
+    11.2 Loyalty Points
+12. Module 8 — Analytics & OEM Reporting
+    12.1 Dashboard
+    12.2 OEM Report Generator
+13. Integrations
+    13.1 Auto Dealer Settings
+    13.2 Loan DSA API
+14. Roles & Permissions
+    14.1 Role Matrix
+    14.2 Role Creation Script
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 3
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+15. Workflows
+    15.1 Vehicle Sale Workflow
+    15.2 Service Job Card Workflow
+16. Print Formats & Reports
+17. Testing Strategy
+    17.1 Unit Tests
+    17.2 Running Tests
+18. Deployment Guide
+    18.1 Production Setup
+    18.2 Supervisor Config
+    18.3 Nginx Config
+19. Go-Live Checklist
+20. Maintenance & Upgrades
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 4
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+1. Project Overview
+This document provides a complete, end-to-end implementation guide for building an automobile
+dealership management system on top of ERPNext v15+ using the Frappe Framework. It covers all 8
+operational departments — vehicle inventory, sales CRM, service workshop, finance & insurance, HR
+payroll, marketing, analytics, and OEM compliance reporting.
+1.1 Business Scope
+Department
+Module
+Priority
+Sales & Lead Management
+DMS + CRM
+Must Have
+Vehicle Inventory
+Stock + Custom DocTypes
+Must Have
+Finance & Insurance
+Accounts + Custom
+Must Have
+Service Workshop
+Maintenance + Custom
+Must Have
+HR & Payroll
+HR Module + Custom
+Important
+Marketing & Retention
+CRM + Integrations
+Important
+Analytics & OEM Reports
+Reports + Custom
+Important
+Operations & Security
+Custom Integrations
+Nice to Have
+1.2 Technology Stack
+Technology
+Version
+Role
+ERPNext
+v15+
+Core ERP platform
+Frappe Framework
+v15+
+App scaffolding, DocTypes, workflows
+MariaDB
+10.6+
+Primary database
+Redis
+7+
+Cache & background queue
+Python
+3.11+
+Backend logic
+Node.js
+18+
+Asset bundling (Vite)
+Nginx
+Latest
+Web server / reverse proxy
+Supervisor
+Latest
+Process management
+1.3 Custom App
+The custom app extends ERPNext with dealership-specific functionality:
+  Custom DocTypes: Vehicle, Test Drive, Vehicle Sale, Service Job Card, Loan Application, Insurance
+Policy
+  Extended DocTypes: Item, Customer, Sales Order with vehicle-specific fields
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 5
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+  Custom Workflows: Vehicle Sale approval chain, Service Job lifecycle
+  Print Formats: Vehicle Invoice, Job Card, Insurance Certificate
+  API Integrations: WhatsApp, insurance portals, bank DSA APIs, OEM portals
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 6
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+2. System Architecture
+2.1 High-Level Architecture
+The system runs as a Frappe application behind an Nginx reverse proxy, with MariaDB as the primary
+database and Redis for caching and background job queues. The custom auto_dealer app sits as a layer
+on top of ERPNext's core modules.
+NGINX (Reverse Proxy / SSL Termination)
+         |
+Frappe / ERPNext Application Server
+  ■■■ DMS Core & Vehicle Inventory
+  ■■■ CRM / Sales & Lead Management
+  ■■■ Service Workshop Management
+  ■■■ Finance & Insurance Billing
+  ■■■ HR, Payroll & Incentives
+  ■■■ Analytics & OEM Reporting
+         |
+  ■■■■■■■■■■■■■■■■■■■■■■■
+  ▼      ▼              ▼
+MariaDB  Redis       Background
+Database Cache         Workers
+2.2 Custom App Architecture
+auto_dealer/
+■■■ hooks.py              ← Signals, scheduled tasks, doc events
+■■■ modules.txt           ← Module registration
+■■■ auto_dealer/          ← Main module
+■   ■■■ doctype/          ← All custom DocTypes
+■   ■   ■■■ vehicle/
+■   ■   ■■■ vehicle_sale/
+■   ■   ■■■ test_drive/
+■   ■   ■■■ service_job_card/
+■   ■   ■■■ insurance_policy/
+■   ■   ■■■ loan_application/
+■   ■   ■■■ oem_target/
+■   ■■■ report/           ← Custom reports
+■   ■■■ print_format/     ← Invoice templates
+■   ■■■ workflow/         ← Workflow definitions
+■■■ api/                  ← External integrations
+■   ■■■ whatsapp.py
+■   ■■■ insurance.py
+■   ■■■ loan_dsa.py
+■   ■■■ marketplace_sync.py
+■■■ public/               ← JS / CSS assets
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 7
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+3. Environment Setup
+3.1 Server Prerequisites
+Resource
+Minimum
+Recommended
+CPU
+4 cores
+8 cores
+RAM
+8 GB
+16 GB
+Storage
+100 GB SSD
+250 GB SSD
+OS
+Ubuntu 22.04 LTS
+Ubuntu 22.04 LTS
+Database
+MariaDB 10.6
+MariaDB 10.11
+3.2 Install Frappe Bench & ERPNext
+# Install system dependencies
+sudo apt update && sudo apt install -y git python3-dev python3-pip \
+  mariadb-server redis-server nginx supervisor wkhtmltopdf
+# Install bench CLI
+pip3 install frappe-bench
+# Initialize bench with ERPNext v15
+bench init --frappe-branch version-15 /home/frappe/erp-bench
+cd /home/frappe/erp-bench
+bench get-app --branch version-15 erpnext
+# Create site
+bench new-site dealership.local \
+  --db-name erpnext_auto \
+  --admin-password YourStrongPassword123
+# Install ERPNext
+bench --site dealership.local install-app erpnext
+3.3 Create Custom App
+# Scaffold new app
+bench new-app auto_dealer
+# App Title:       Auto Dealer
+# App Description: Automobile Dealership Management for ERPNext
+# App Publisher:   Your Company Name
+# App License:     MIT
+# Install on site
+bench --site dealership.local install-app auto_dealer
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 8
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+4. Custom App Scaffolding
+4.1 hooks.py — Core Configuration
+The hooks.py file is the entry point of the custom app. It registers scheduled tasks, document event
+handlers, fixtures, and overrides for existing ERPNext DocTypes.
+app_name = "auto_dealer"
+app_title = "Auto Dealer"
+required_apps = ["frappe", "erpnext"]
+# Override existing DocTypes
+override_doctype_class = {
+    "Sales Order": "auto_dealer.overrides.sales_order.CustomSalesOrder",
+    "Customer":    "auto_dealer.overrides.customer.CustomCustomer",
+}
+# Scheduled tasks
+scheduler_events = {
+    "daily": [
+        "auto_dealer.tasks.send_service_reminders",
+        "auto_dealer.tasks.check_insurance_renewals",
+        "auto_dealer.tasks.check_amc_renewals",
+    ],
+    "weekly":  ["auto_dealer.tasks.slow_moving_inventory_alert"],
+    "monthly": ["auto_dealer.tasks.generate_oem_monthly_report"],
+}
+# Document events
+doc_events = {
+    "Vehicle Sale": {
+        "on_submit": [
+            "auto_dealer.events.vehicle_sale.on_submit",
+            "auto_dealer.events.vehicle_sale.trigger_whatsapp_confirmation",
+        ],
+    },
+    "Service Job Card": {
+        "on_submit": "auto_dealer.events.service_job_card.on_submit",
+    },
+}
+# Fixtures exported with the app
+fixtures = [
+    {"dt": "Role", "filters": [["name", "in", [
+        "Dealer Admin", "Sales Consultant", "Service Advisor",
+        "Workshop Technician", "Finance Executive", "DMS Manager"
+    ]]]},
+    {"dt": "Workflow"},
+    {"dt": "Print Format"},
+    {"dt": "Custom Field"},
+]
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 9
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+5. Module 1 — Dealer Management System (DMS) Core
+ Vehicle DocType & Vehicle Sale transaction
+5.1 Vehicle DocType — Key Fields
+Field Name
+Type
+Description
+vin_number
+Data (Unique)
+17-char Vehicle Identification Number
+make
+Link → Vehicle Make
+Manufacturer (Maruti, Hyundai, Tata…)
+model
+Link → Vehicle Model
+Model name
+variant
+Data
+Variant (VXI, ZXI, etc.)
+year_of_manufacture
+Int
+Manufacturing year
+color
+Link → Vehicle Color
+Colour from master
+fuel_type
+Select
+Petrol / Diesel / CNG / Electric / Hybrid
+vehicle_type
+Select
+New / Used / Demo / Certified Pre-Owned
+status
+Select
+Available / Booked / Sold / In Service / Demo
+ex_showroom_price
+Currency
+Ex-showroom price
+on_road_price
+Currency
+Full on-road price
+days_in_stock
+Int (Read Only)
+Auto-calculated from OEM invoice date
+oem_invoice_date
+Date
+Date of receipt from OEM
+5.2 Vehicle Controller — Key Business Logic
+class Vehicle(Document):
+    def before_save(self):
+        self.calculate_days_in_stock()
+        self.validate_vin()
+    def calculate_days_in_stock(self):
+        if self.oem_invoice_date:
+            self.days_in_stock = date_diff(today(), self.oem_invoice_date)
+    def validate_vin(self):
+        if self.vin_number and len(self.vin_number) != 17:
+            frappe.throw("VIN Number must be exactly 17 characters.")
+    def on_submit(self):
+        if self.status == "Sold":
+            self.update_inventory_ledger()
+5.3 Vehicle Sale — Submission Chain
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 10
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+When a Vehicle Sale document is submitted, the system automatically executes the following chain of
+actions in sequence:
+  Validates vehicle is still Available or Booked
+  Calculates grand total including registration, insurance, accessories, and discounts
+  Updates Vehicle status to Sold and links the customer
+  Creates a Sales Invoice with correct GST tax template
+  Logs a CRM Activity record for sales reporting
+  Creates a Vehicle Delivery Checklist document
+  Triggers a WhatsApp confirmation message to the customer
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 11
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+6. Module 2 — Vehicle Inventory Management
+6.1 Inventory KPIs Tracked
+KPI
+Source
+Alert Trigger
+Total vehicles available
+Vehicle DocType
+—
+Slow-moving vehicles
+days_in_stock > threshold
+Configurable (default 60 days)
+Booked vehicles
+status = Booked
+—
+Stock ageing by model
+Grouped report
+Weekly email to DMS Manager
+Parts stock below reorder
+Bin DocType
+Daily check, auto Material Request
+6.2 Marketplace Sync — CarDekho Integration
+Vehicle listings are auto-synced to CarDekho's partner portal when a vehicle is marked Available. The
+sync includes VIN, specs, price, and images. Failed syncs are logged to the Frappe error log for retry.
+def sync_to_cardekho(vehicle_name):
+    vehicle = frappe.get_doc("Vehicle", vehicle_name)
+    settings = frappe.get_single("Auto Dealer Settings")
+    payload = {
+        "dealer_id": settings.cardekho_dealer_id,
+        "vin": vehicle.vin_number,
+        "make": vehicle.make,
+        "model": vehicle.model,
+        "price": vehicle.ex_showroom_price,
+        # ... more fields
+    }
+    response = requests.post(
+        settings.cardekho_api_url,
+        json=payload,
+        headers={"Authorization": f"Bearer {settings.cardekho_api_key}"},
+    )
+    response.raise_for_status()
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 12
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+7. Module 3 — Sales & Lead Management (CRM)
+7.1 Lead Assignment — Round Robin
+Leads are auto-assigned to Sales Consultants using a load-balanced round-robin algorithm based on
+current open lead count. A WhatsApp acknowledgement is sent to the prospect immediately after lead
+creation.
+7.2 Test Drive DocType — Validations
+Validation
+Rule
+Vehicle availability
+Vehicle status must be Available or Demo
+Slot conflict
+No two test drives for same vehicle at same time
+Driving license
+DL number is mandatory before booking is saved
+Lead linkage
+Test drive must be linked to a Lead or Customer
+7.3 Post-Test-Drive Follow-up Automation
+When a Test Drive is marked Complete, the system automatically creates a follow-up Activity assigned to
+the Sales Consultant due the next business day. Vehicle status is reverted to Available.
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 13
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+8. Module 4 — Finance, Insurance & Billing
+8.1 Loan Application — EMI Calculation
+The standard reducing-balance EMI formula is used: EMI = P × r × (1+r)^n / ((1+r)^n - 1). All calculation
+fields (EMI, total payable, total interest) are auto-populated on save.
+def calculate_emi(self):
+    p = self.loan_amount        # Principal
+    r = (self.interest_rate / 100) / 12   # Monthly rate
+    n = self.tenure_months
+    if r > 0:
+        emi = p * r * ((1 + r) ** n) / (((1 + r) ** n) - 1)
+        self.emi_amount   = round(emi, 2)
+        self.total_payable = round(emi * n, 2)
+        self.total_interest = round(self.total_payable - p, 2)
+8.2 GST Configuration for Vehicle Sales
+Tax Component
+Rate
+Account Head
+CGST
+14%
+CGST Payable
+SGST
+14%
+SGST Payable
+IGST (inter-state)
+28%
+IGST Payable
+TCS (on vehicles > ■10L)
+1%
+TCS Payable
+8.3 Insurance Policy — Renewal Automation
+Insurance policies expiring within 30 days trigger automated WhatsApp renewal reminders to the
+customer. The renewal quote is fetched in real-time from the insurer's API.
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 14
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+9. Module 5 — Service & After-Sales Workshop
+9.1 Service Job Card Lifecycle
+Stage
+Status
+Triggered Action
+Customer arrival
+Open
+Create job card, send WhatsApp to customer
+Bay assignment
+Bay Assigned
+Notify technician
+Work starts
+Work in Progress
+Start timer for labour hours
+Work complete
+QC Check
+Quality inspection step
+Ready for delivery
+Ready
+WhatsApp notification to customer
+Vehicle delivered
+Delivered & Invoiced
+Create service invoice, collect payment
+9.2 Auto Parts Request on Job Card Submit
+When a Service Job Card is submitted, the system checks stock for each required part. If any part's
+quantity in the Service Warehouse is below the required amount, a Material Request is auto-created and
+assigned to the Parts Incharge.
+9.3 AMC Contract — Reminder Schedule
+Trigger
+Days Before Expiry
+Channel
+First reminder
+30 days
+WhatsApp
+Second reminder
+15 days
+WhatsApp + Email
+Final reminder
+7 days
+WhatsApp + Call task to SA
+Expired alert
+0 days (expiry)
+Email to Dealer Admin
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 15
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+10. Module 6 — HR, Payroll & Incentives
+10.1 Sales Incentive Structure
+Incentives for sales consultants are calculated monthly and include four components:
+Component
+Basis
+Example
+Vehicle sale incentive
+Per vehicle sold (by type)
+■3,000 per new car
+Finance cross-sell bonus
+Fixed per finance deal
+■500 per deal
+Insurance cross-sell bonus
+Fixed per insurance deal
+■300 per deal
+Accessories upsell commission
+5% of accessories value
+■1,000 on ■20,000 accessories
+10.2 Payroll Integration
+The monthly incentive calculation is linked to ERPNext's native Payroll Entry. The incentive component is
+added as an Earning in the Salary Structure, auto-populated from the incentive calculation report before
+payroll processing.
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 16
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+11. Module 7 — Marketing & Customer Retention
+11.1 WhatsApp Automation Templates
+Template
+Trigger
+Variables
+lead_acknowledgement
+New lead created
+customer_name, model, dealership_name
+test_drive_confirmation
+Test drive submitted
+name, vehicle, date, time
+service_started
+Job card submitted
+name, job_card, vehicle, advisor
+vehicle_ready
+Job card completed
+name, vehicle, invoice, amount
+amc_renewal_reminder
+30/15/7 days before AMC expiry
+vehicle, expiry_date
+insurance_renewal
+30 days before policy expiry
+vehicle, policy_number, expiry_date
+11.2 Loyalty Points — Earn & Redeem
+Event
+Points Awarded
+Vehicle purchase
+500 points
+Service visit
+50 points per visit
+Referral (friend buys a car)
+200 points
+Insurance renewal at dealership
+100 points
+Redemption value
+1 point = ■1 off on service
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 17
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+12. Module 8 — Analytics & OEM Reporting
+12.1 Dealer Dashboard KPIs
+KPI Category
+Metrics Shown
+Vehicles
+Available, Booked, Sold MTD, Slow-moving (>60 days)
+Revenue
+Vehicle sales MTD, Service revenue MTD, Parts revenue MTD
+Leads
+New today, Open leads, Converted MTD
+Service
+Open jobs, Completed today, Pending delivery
+OEM Targets
+Volume target vs achieved, % completion
+12.2 OEM Monthly Report Structure
+Column
+Description
+Model / Variant
+Vehicle model and variant sold
+Units Sold
+Total retail units in the month
+Retail Revenue
+Total revenue (grand total)
+Finance Penetration %
+% of sales with finance arranged
+Insurance Penetration %
+% of sales with insurance sold
+Avg Discount
+Average discount given per unit
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 18
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+13. Integrations
+13.1 Auto Dealer Settings — Configuration Fields
+Field
+Type
+Purpose
+dealership_name
+Data
+Displayed on invoices and messages
+oem_brand
+Select
+OEM brand (Maruti / Hyundai / Tata…)
+whatsapp_enabled
+Check
+Toggle WhatsApp messaging on/off
+whatsapp_api_key
+Password
+Interakt / Wati API key
+cardekho_dealer_id
+Data
+CarDekho partner dealer ID
+finance_crosssell_bonus
+Currency
+Bonus per finance cross-sell deal
+insurance_crosssell_bonus
+Currency
+Bonus per insurance deal
+loyalty_point_value
+Currency
+Rupee value per loyalty point
+slow_moving_threshold_days
+Int
+Days before slow-moving alert (default 60)
+13.2 External API Integrations Summary
+Integration
+Provider Options
+Use Case
+WhatsApp Business
+Interakt, Wati, AiSensy, Gupshup
+Customer notifications
+Vehicle marketplace
+CarDekho, OLX Autos, Cars24
+Inventory listing sync
+Loan DSA
+HDFC, ICICI, Lendingkart portals
+On-spot finance applications
+Insurance
+Coverfox B2B, Policybazaar Biz
+Policy issuance at delivery
+GST filing
+GST portal / Cleartax API
+GSTR-1 / GSTR-3B filing
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 19
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+14. Roles & Permissions
+14.1 Role Matrix
+ R = Read  |  W = Write  |  C = Create  |  D = Delete  |  S = Submit
+DocType
+Dealer
+Admin
+DMS
+Manager
+Sales
+Consult.
+Service Adv.
+Workshop
+Tech
+Finance
+Exec
+Vehicle
+RWCD
+RWCD
+R
+R
+R
+R
+Vehicle Sale
+RWCDS
+RWCS
+RWC
+—
+—
+RS
+Test Drive
+RWCD
+RWCD
+RWCD
+—
+—
+—
+Service Job Card
+RWCDS
+RWS
+—
+RWCDS
+RW
+—
+Loan Application
+RWCDS
+—
+RWC
+—
+—
+RWCDS
+Insurance Policy
+RWCDS
+—
+RWC
+—
+—
+RWCDS
+Lead
+RWCD
+RWCD
+RWCD
+—
+—
+—
+OEM Target
+RWCD
+RWC
+R
+—
+—
+—
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 20
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+15. Workflows
+15.1 Vehicle Sale Workflow
+From State
+Action
+To State
+Allowed Role
+Condition
+Draft
+Verify
+Verified
+DMS Manager
+grand_total > 0
+Verified
+Approve Finance
+Finance Approved
+Finance Executive
+finance_done = 1
+Verified
+Skip Finance
+Delivery Scheduled
+DMS Manager
+finance_done = 0
+Finance Approved
+Schedule Delivery
+Delivery Scheduled
+DMS Manager
+—
+Delivery Scheduled
+Mark Delivered
+Delivered
+Dealer Admin
+—
+15.2 Service Job Card Workflow
+From State
+To State
+Allowed Role
+Draft
+Bay Assigned
+Service Advisor
+Bay Assigned
+Work in Progress
+Workshop Technician
+Work in Progress
+QC Check
+Workshop Technician
+QC Check
+Ready for Delivery
+Service Advisor
+Ready for Delivery
+Delivered & Invoiced
+Service Advisor
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 21
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+16. Print Formats & Reports
+16.1 Print Formats Required
+Print Format
+DocType
+Key Content
+Vehicle Sale Invoice
+Vehicle Sale
+VIN, specs, price breakdown, GST, terms
+Service Job Card
+Service Job Card
+Job details, parts, labour, technician sign-off
+Insurance Certificate
+Insurance Policy
+Policy number, vehicle, coverage, premium
+Loan Sanction Letter
+Loan Application
+Loan amount, EMI, tenure, bank details
+Delivery Checklist
+Vehicle Delivery Checklist
+Accessories, documents, key handover
+OEM Monthly Report
+Report
+Model-wise sales, finance %, insurance %
+16.2 Custom Reports List
+Report Name
+Type
+Used By
+Slow Moving Inventory
+Script Report
+DMS Manager, Dealer Admin
+OEM Monthly Sales Report
+Script Report
+Dealer Admin
+Sales Consultant Performance
+Script Report
+Dealer Admin, DMS Manager
+Service Revenue Analysis
+Script Report
+Dealer Admin
+Insurance Renewal Due
+Query Report
+Finance Executive
+AMC Expiry Report
+Query Report
+Service Advisor
+Lead Conversion Funnel
+Script Report
+DMS Manager
+Monthly Incentive Summary
+Script Report
+HR Manager
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 22
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+17. Testing Strategy
+17.1 Test Coverage Requirements
+Module
+Test Cases
+Priority
+Vehicle DocType
+VIN validation, days_in_stock calc, status transitions
+High
+Vehicle Sale
+Total calculation, availability check, invoice creation
+High
+EMI Calculator
+Standard EMI formula accuracy (±■50 tolerance)
+High
+Service Job Card
+Parts request auto-creation, technician validation
+Medium
+WhatsApp Integration
+Message formatting, error handling, retry
+Medium
+Incentive Calculation
+All components, edge cases (zero sales)
+Medium
+Workflow Transitions
+All state transitions, condition checks
+High
+17.2 Running Tests
+# Run all tests for the custom app
+bench --site dealership.local run-tests --app auto_dealer
+# Run specific test module
+bench --site dealership.local run-tests \
+  --module auto_dealer.tests.test_vehicle
+# Run with coverage report
+bench --site dealership.local run-tests \
+  --app auto_dealer --coverage
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 23
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+18. Deployment Guide
+18.1 Production Setup
+# Enable production mode (Supervisor + Nginx)
+sudo bench setup production frappe
+# Configure Nginx
+bench setup nginx
+sudo service nginx reload
+# Install SSL certificate
+sudo certbot --nginx -d dealership.yourdomain.com
+# Configure daily backups
+bench --site dealership.local set-config backup_limit 7
+18.2 Supervisor Workers
+Process
+Purpose
+Instances
+frappe-web (gunicorn)
+Serve HTTP requests
+4 workers
+frappe-worker-default
+Short background jobs
+2 workers
+frappe-worker-long
+Long-running jobs (reports, bulk)
+1 worker
+frappe-schedule
+Scheduler — triggers cron tasks
+1
+18.3 Environment Variables & Security
+  Store all API keys in Auto Dealer Settings with Password fieldtype (encrypted at rest)
+  Restrict database access to localhost only (bind-address = 127.0.0.1)
+  Enable UFW firewall — allow only ports 22 (SSH), 80, 443
+  Set up fail2ban for brute-force protection on SSH and web login
+  Configure automated nightly backups to an off-server location (S3/Google Cloud Storage)
+  Enable 2FA for all Dealer Admin accounts
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 24
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+19. Go-Live Checklist
+Phase 1 — Infrastructure (Week 1)
+■  Server provisioned, hardened, and tested
+■  ERPNext v15 installed and accessible
+■  Custom app auto_dealer installed and smoke-tested
+■  SSL certificate configured and auto-renewal enabled
+■  Daily automated backups configured and tested
+■  MariaDB performance tuned (innodb_buffer_pool_size = 4G)
+Phase 2 — Master Data (Week 2)
+■  Company, GSTIN, and address configured
+■  Chart of accounts set up for auto dealership
+■  Vehicle Makes, Models, Colors master data imported
+■  Showroom and service warehouse locations created
+■  Labour service items and common parts item masters imported
+■  GST tax templates configured (CGST + SGST)
+■  Empanelled banks and insurance companies configured
+Phase 3 — Users, Roles & Workflows (Week 2)
+■  All 6 roles created and permissions verified
+■  User accounts created for all staff
+■  Vehicle Sale workflow activated and tested end-to-end
+■  Service Job Card workflow activated and tested
+■  Email and notification configuration done
+Phase 4 — Integrations (Week 3)
+■  WhatsApp API connected, templates approved, test messages sent
+■  CarDekho / marketplace sync tested with a sample vehicle
+■  Loan DSA API connected and application submission tested
+■  Insurance portal API connected and quote generation tested
+Phase 5 — Data Migration (Week 3–4)
+■  Existing vehicle stock imported via CSV upload
+■  Active customers imported and verified
+■  Open service job cards migrated
+■  Active AMC contracts and insurance policies entered
+Phase 6 — Training (Week 4)
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 25
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+■  Dealer Admin and DMS Manager trained (2 days)
+■  Sales Consultants trained on CRM and Vehicle Sale (1 day)
+■  Service Advisors and Technicians trained on Job Card flow (1 day)
+■  Finance team trained on Loan and Insurance modules (1 day)
+■  User Acceptance Testing completed and signed off by each department
+Phase 7 — Go-Live
+■  All UAT issues resolved and re-tested
+■  Final production backup taken
+■  Go-live date communicated to all staff
+■  Support contact and escalation matrix shared
+■  Hypercare period defined (2 weeks of daily check-ins post go-live)
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 26
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+20. Maintenance & Upgrades
+20.1 Routine Maintenance Commands
+# Daily health check
+bench --site dealership.local doctor
+# Clear cache (after config changes)
+bench --site dealership.local clear-cache
+# Take manual backup
+bench --site dealership.local backup --with-files
+# Update ERPNext + custom app
+bench update --pull
+bench migrate
+sudo supervisorctl restart all
+20.2 Monitoring Alerts
+Alert
+Threshold
+Action
+Site downtime
+> 1 minute
+Page on-call developer immediately
+Disk usage
+> 80%
+Clean old backups, expand disk
+Worker queue backlog
+> 500 jobs
+Scale worker count
+Slow SQL queries
+> 5 sec average
+Review and add indexes
+Background job failures
+> 5/hour
+Check frappe error log
+Backup failure
+Any failure
+Immediate attention
+20.3 Appendix — DocType Quick Reference
+DocType
+Purpose
+Key Fields
+Vehicle
+Master vehicle record
+VIN, status, make, model, price, days_in_stock
+Vehicle Sale
+Sales transaction
+Vehicle, customer, grand_total, delivery_date
+Test Drive
+Test drive booking
+Vehicle, customer, date/time, license_no
+Service Job Card
+Workshop job
+Vehicle, technician, parts, labour, status
+Loan Application
+Finance application
+Amount, rate, tenure, bank, EMI
+Insurance Policy
+Insurance record
+Policy_no, insurer, expiry, premium
+AMC Contract
+Maintenance contract
+Vehicle, duration, next_service_due
+OEM Target
+Monthly OEM targets
+Month, volume_target, revenue_target
+Sales Incentive Rule
+Commission slabs
+Vehicle_type, incentive_amount
+Automobile Dealership ERP — ERPNext v15+ Implementation Guide
+Page 27
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 — April 2026
+Loyalty Account
+Customer points
+Customer, total_points, transactions
+ Document Version 1.0  |  April 2026  |  Framework: ERPNext v15+ / Frappe  |  Custom App: auto_dealer

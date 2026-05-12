@@ -3,7 +3,7 @@ Weekly Scheduled Tasks
 -----------------------
 Executed once per week by the Frappe scheduler.
 Tasks:
-  1. slow_moving_inventory_report — Flag vehicles in stock > 60 days
+  1. slow_moving_inventory_alert — Flag vehicles in stock > 60 days
   2. oem_stock_report             — Generate OEM reconciliation report
 """
 
@@ -11,51 +11,57 @@ import frappe
 from frappe.utils import today, date_diff
 
 
-SLOW_MOVING_THRESHOLD_DAYS = 60
+def slow_moving_inventory_alert():
+    """
+    Weekly: Alert DMS Manager and Dealer Admin of slow-moving vehicles.
+    Source: PDF Section 6.1 — Stock ageing > threshold (default 60 days) → weekly email.
+    """
+    try:
+        settings = frappe.get_single("Auto Dealer Settings")
+        threshold = settings.slow_moving_threshold_days or 60
 
+        slow_movers = frappe.db.sql("""
+            SELECT vin_number, make, model, variant, days_in_stock,
+                   ex_showroom_price, status, branch
+            FROM `tabVehicle`
+            WHERE status NOT IN ('Sold', 'In Service')
+              AND days_in_stock > %(threshold)s
+              AND docstatus = 1
+            ORDER BY days_in_stock DESC
+        """, {"threshold": threshold}, as_dict=True)
 
-def slow_moving_inventory_report():
-	"""
-	Identify and report vehicles that have been in stock for more than 60 days.
-	Creates a frappe.log_error / notification for Sales Manager.
-	"""
-	slow_vehicles = frappe.get_all(
-		"Vehicle",
-		filters={
-			"status": "Available",
-			"days_in_stock": [">", SLOW_MOVING_THRESHOLD_DAYS],
-			"docstatus": 1,
-		},
-		fields=["name", "vin", "make", "model", "variant", "days_in_stock", "branch", "ex_showroom_price"],
-		order_by="days_in_stock desc",
-	)
+        if not slow_movers:
+            frappe.logger("auto_dealer").info("[Weekly] No slow-moving vehicles found.")
+            return
 
-	if not slow_vehicles:
-		frappe.logger("auto_dealer").info("[Weekly Task] No slow-moving vehicles found.")
-		return
+        # Build email table
+        rows = "".join(
+            f"<tr><td>{v.vin_number}</td><td>{v.make} {v.model}</td>"
+            f"<td>{v.variant or '-'}</td><td>{v.days_in_stock}</td>"
+            f"<td>₹{v.ex_showroom_price:,.0f}</td><td>{v.status}</td></tr>"
+            for v in slow_movers
+        )
+        body = f"""
+        <h3>Slow Moving Inventory Alert — {today()}</h3>
+        <p>The following {len(slow_movers)} vehicles have been in stock for more than {threshold} days:</p>
+        <table border="1" cellpadding="5">
+        <tr><th>VIN</th><th>Vehicle</th><th>Variant</th><th>Days in Stock</th><th>Price</th><th>Status</th></tr>
+        {rows}
+        </table>
+        """
 
-	report_lines = [
-		f"⚠️ Slow-Moving Inventory Report ({today()}) — {len(slow_vehicles)} vehicles over {SLOW_MOVING_THRESHOLD_DAYS} days:"
-	]
-	for v in slow_vehicles:
-		report_lines.append(
-			f"  • {v['vin']} | {v['make']} {v['model']} {v.get('variant', '')} | "
-			f"{v['days_in_stock']} days | Branch: {v['branch']} | ₹{v['ex_showroom_price']:,.0f}"
-		)
-
-	report_text = "\n".join(report_lines)
-
-	# Send in-app notification to Sales Manager role
-	frappe.sendmail(
-		recipients=_get_role_emails("Sales Manager"),
-		subject=f"[Auto Dealer] Slow-Moving Inventory Report — {today()}",
-		message=report_text.replace("\n", "<br>"),
-		now=False,
-	)
-
-	frappe.logger("auto_dealer").info(
-		f"[Weekly Task] Slow-moving report: {len(slow_vehicles)} vehicles flagged."
-	)
+        recipients = _get_role_emails(["DMS Manager", "Dealer Admin"])
+        if recipients:
+            frappe.sendmail(
+                recipients=recipients,
+                subject=f"Slow Moving Inventory Alert — {len(slow_movers)} vehicles ({today()})",
+                message=body,
+            )
+        frappe.logger("auto_dealer").info(
+            f"[Weekly] Slow moving alert: {len(slow_movers)} vehicles, emailed to {len(recipients)} recipients."
+        )
+    except Exception:
+        frappe.log_error(title="slow_moving_inventory_alert Failed", message=frappe.get_traceback())
 
 
 def oem_stock_report():
@@ -95,7 +101,7 @@ def oem_stock_report():
 	report_text = f"OEM Stock Reconciliation Report — {today()}\n\n" + "\n".join(rows)
 
 	frappe.sendmail(
-		recipients=_get_role_emails("Dealer Principal"),
+		recipients=_get_role_emails(["Dealer Principal"]),
 		subject=f"[Auto Dealer] OEM Stock Reconciliation — {today()}",
 		message=report_text.replace("\n", "<br>"),
 		now=False,
@@ -104,16 +110,20 @@ def oem_stock_report():
 	frappe.logger("auto_dealer").info("[Weekly Task] OEM stock report sent.")
 
 
-def _get_role_emails(role: str) -> list:
-	"""Fetch email addresses of all users with a given role."""
-	users = frappe.get_all(
-		"Has Role",
-		filters={"role": role, "parenttype": "User"},
-		fields=["parent"],
-	)
+def _get_role_emails(roles) -> list:
+	"""Fetch email addresses of all users with given roles."""
+	if isinstance(roles, str):
+		roles = [roles]
+	
 	emails = []
-	for u in users:
-		email = frappe.db.get_value("User", u["parent"], "email")
-		if email and email != "Administrator":
-			emails.append(email)
-	return emails or ["admin@example.com"]
+	for role in roles:
+		users = frappe.get_all(
+			"Has Role",
+			filters={"role": role, "parenttype": "User"},
+			fields=["parent"],
+		)
+		for u in users:
+			email = frappe.db.get_value("User", u["parent"], "email")
+			if email and email != "Administrator":
+				emails.append(email)
+	return list(set(emails)) or ["admin@example.com"]

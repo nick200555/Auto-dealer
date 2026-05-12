@@ -1,0 +1,183 @@
+﻿python : Traceback (most recent call last):
+At line:1 char:1
++ python -c "
++ ~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "<string>", line 7, in <module>
+Pages: 27
+--- PAGE 1 ---
+Automobile Dealership ERP
+ERPNext v15+ Implementation Guide
+Complete Project Documentation ù Start to End
+Frappe Framework  |  Custom App: auto_dealer
+Industry
+Automobile Dealership (Medium Business)
+Framework
+ERPNext v15+ / Frappe
+Custom App
+auto_dealer
+Database
+MariaDB 10.6+
+Document
+Implementation Guide v1.0
+Date
+April 2026
+
+--- PAGE 2 ---
+Automobile Dealership ERP ù ERPNext v15+ Implementation Guide
+Page 2
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 ù April 2026
+Table of Contents
+1. Project Overview
+2. System Architecture
+3. Environment Setup
+    3.1 Prerequisites
+    3.2 Install Frappe Bench
+    3.3 Create Custom App
+    3.4 Directory Structure
+4. Custom App Scaffolding
+    4.1 hooks.py
+    4.2 modules.txt
+5. Module 1 ù Dealer Management System (DMS) Core
+    5.1 Vehicle DocType
+    5.2 Vehicle Sale DocType
+6. Module 2 ù Vehicle Inventory Management
+    6.1 Inventory Tracking
+    6.2 Marketplace Sync
+    6.3 Parts & Accessories
+7. Module 3 ù Sales & Lead Management (CRM)
+    7.1 Lead Capture
+    7.2 Test Drive DocType
+8. Module 4 ù Finance, Insurance & Billing
+    8.1 Loan Application
+    8.2 Insurance Policy
+    8.3 GST Billing
+9. Module 5 ù Service & After-Sales Workshop
+    9.1 Service Job Card
+    9.2 AMC & Warranty Tracker
+10. Module 6 ù HR, Payroll & Incentives
+    10.1 Sales Incentive
+    10.2 Attendance Integration
+11. Module 7 ù Marketing & Customer Retention
+    11.1 WhatsApp Integration
+    11.2 Loyalty Points
+12. Module 8 ù Analytics & OEM Reporting
+    12.1 Dashboard
+    12.2 OEM Report Generator
+13. Integrations
+    13.1 Auto Dealer Settings
+    13.2 Loan DSA API
+14. Roles & Permissions
+    14.1 Role Matrix
+    14.2 Role Creation Script
+
+--- PAGE 3 ---
+Automobile Dealership ERP ù ERPNext v15+ Implementation Guide
+Page 3
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 ù April 2026
+15. Workflows
+    15.1 Vehicle Sale Workflow
+    15.2 Service Job Card Workflow
+16. Print Formats & Reports
+17. Testing Strategy
+    17.1 Unit Tests
+    17.2 Running Tests
+18. Deployment Guide
+    18.1 Production Setup
+    18.2 Supervisor Config
+    18.3 Nginx Config
+19. Go-Live Checklist
+20. Maintenance & Upgrades
+
+--- PAGE 4 ---
+Automobile Dealership ERP ù ERPNext v15+ Implementation Guide
+Page 4
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 ù April 2026
+1. Project Overview
+This document provides a complete, end-to-end implementation guide for building an automobile
+dealership management system on top of ERPNext v15+ using the Frappe Framework. It covers all 8
+operational departments ù vehicle inventory, sales CRM, service workshop, finance & insurance, HR
+payroll, marketing, analytics, and OEM compliance reporting.
+1.1 Business Scope
+Department
+Module
+Priority
+Sales & Lead Management
+DMS + CRM
+Must Have
+Vehicle Inventory
+Stock + Custom DocTypes
+Must Have
+Finance & Insurance
+Accounts + Custom
+Must Have
+Service Workshop
+Maintenance + Custom
+Must Have
+HR & Payroll
+HR Module + Custom
+Important
+Marketing & Retention
+CRM + Integrations
+Important
+Analytics & OEM Reports
+Reports + Custom
+    print(page.get_text())
+    ~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\Admin\AppData\Local\Programs\Python\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u2190' in position 943: character maps to <undefined>
+Important
+Operations & Security
+Custom Integrations
+Nice to Have
+1.2 Technology Stack
+Technology
+Version
+Role
+ERPNext
+v15+
+Core ERP platform
+Frappe Framework
+v15+
+App scaffolding, DocTypes, workflows
+MariaDB
+10.6+
+Primary database
+Redis
+7+
+Cache & background queue
+Python
+3.11+
+Backend logic
+Node.js
+18+
+Asset bundling (Vite)
+Nginx
+Latest
+Web server / reverse proxy
+Supervisor
+Latest
+Process management
+1.3 Custom App
+The custom app extends ERPNext with dealership-specific functionality:
+ò  Custom DocTypes: Vehicle, Test Drive, Vehicle Sale, Service Job Card, Loan Application, Insurance
+Policy
+ò  Extended DocTypes: Item, Customer, Sales Order with vehicle-specific fields
+
+--- PAGE 5 ---
+Automobile Dealership ERP ù ERPNext v15+ Implementation Guide
+Page 5
+Confidential | auto_dealer custom app | Frappe Framework
+Version 1.0 ù April 2026
+ò  Custom Workflows: Vehicle Sale approval chain, Service Job lifecycle
+ò  Print Formats: Vehicle Invoice, Job Card, Insurance Certificate
+ò  API Integrations: WhatsApp, insurance portals, bank DSA APIs, OEM portals
+
+--- PAGE 6 ---

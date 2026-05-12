@@ -22,12 +22,13 @@ override_doctype_class = {
 # Source: Section 4.1 — hooks.py scheduler_events
 scheduler_events = {
     "daily": [
-        "auto_dealer.tasks.send_service_reminders",
-        "auto_dealer.tasks.check_insurance_renewals",
-        "auto_dealer.tasks.check_amc_renewals",
+        "auto_dealer.tasks.daily.send_service_reminders",
+        "auto_dealer.tasks.daily.check_insurance_renewals",
+        "auto_dealer.tasks.daily.check_amc_renewals",
+        "auto_dealer.tasks.daily.update_days_in_stock",
     ],
-    "weekly":  ["auto_dealer.tasks.slow_moving_inventory_alert"],
-    "monthly": ["auto_dealer.tasks.generate_oem_monthly_report"],
+    "weekly":  ["auto_dealer.tasks.weekly.slow_moving_inventory_alert"],
+    "monthly": ["auto_dealer.tasks.monthly.generate_oem_monthly_report"],
 }
 
 # ─── Document Events ──────────────────────────────────────────────────────────
