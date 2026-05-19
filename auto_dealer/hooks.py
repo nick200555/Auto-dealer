@@ -59,6 +59,7 @@ fixtures = [
     {"dt": "Workflow"},
     {"dt": "Print Format"},
     {"dt": "Custom Field"},
+    {"dt": "Workspace", "filters": [["name", "in", ["Auto Dealer"]]]},
 ]
 
 # ─── Desk / App UI ────────────────────────────────────────────────────────────
